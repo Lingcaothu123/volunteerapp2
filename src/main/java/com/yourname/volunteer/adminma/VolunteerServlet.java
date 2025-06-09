@@ -135,13 +135,33 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
         }
 
         // 3. Nếu là "Hủy đăng ký" → Xóa khỏi attend
-        if ("Hủy đăng ký".equals(status)) {
-            String deleteAttend = "DELETE FROM attend WHERE iduser=? AND idactive=?";
-            PreparedStatement deleteStmt = conn.prepareStatement(deleteAttend);
-            deleteStmt.setInt(1, userId);
-            deleteStmt.setInt(2, activityId);
-            deleteStmt.executeUpdate();
-        }
+if ("Hủy đăng ký".equals(status)) {
+    // 1. Xóa khỏi attend
+    String deleteAttend = "DELETE FROM attend WHERE iduser=? AND idactive=?";
+    try (PreparedStatement deleteStmt = conn.prepareStatement(deleteAttend)) {
+        deleteStmt.setInt(1, userId);
+        deleteStmt.setInt(2, activityId);
+        deleteStmt.executeUpdate();
+    }
+
+    // 2. Xóa khỏi trangthai
+    String deleteTrangThai = "DELETE FROM trangthai WHERE iduser=? AND idactive=?";
+    try (PreparedStatement deleteTrangThaiStmt = conn.prepareStatement(deleteTrangThai)) {
+        deleteTrangThaiStmt.setInt(1, userId);
+        deleteTrangThaiStmt.setInt(2, activityId);
+        deleteTrangThaiStmt.executeUpdate();
+    }
+
+    // 3. Thêm vào history
+    String insertHistory = "INSERT INTO history (ngaygiothaotac, tt, iduser, id) VALUES (GETDATE(), ?, ?, ?)";
+    try (PreparedStatement insertHistoryStmt = conn.prepareStatement(insertHistory)) {
+        insertHistoryStmt.setString(1, "Admin Hủy");
+        insertHistoryStmt.setString(2, String.valueOf(userId)); // vì iduser là nvarchar
+        insertHistoryStmt.setString(3, String.valueOf(activityId)); // vì id (tức idactive) là nvarchar(10)
+        insertHistoryStmt.executeUpdate();
+    }
+}
+
 
         response.sendRedirect("VolunteerServlet");
 

@@ -33,10 +33,23 @@
 <tr>
     <td><%= cat.getName() %></td>
     <td>
-        <a href="CategoryServlet?action=edit&id=<%= cat.getId() %>">Edit</a> |
-        <a href="CategoryServlet?action=delete&id=<%= cat.getId() %>">Delete</a>
+        <!-- Form Edit -->
+        <form method="post" action="CategoryServlet" style="display:inline;">
+            <input type="hidden" name="action" value="edit">
+            <input type="hidden" name="id" value="<%= cat.getId() %>">
+            <input type="text" name="category" value="<%= cat.getName() %>" required>
+            <input type="submit" value="Save">
+        </form>
+
+        <!-- Form Delete -->
+        <form method="post" action="CategoryServlet" style="display:inline;" onsubmit="return confirm('Bạn có chắc muốn xóa?');">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="id" value="<%= cat.getId() %>">
+            <input type="submit" value="Delete">
+        </form>
     </td>
 </tr>
+
 <%
         }
     }

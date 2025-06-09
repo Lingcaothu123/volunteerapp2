@@ -20,7 +20,7 @@ public class QRCodeGenerator extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String idactive = request.getParameter("idactive"); // Lấy ID hoạt động từ query string
+        String idactive = request.getParameter("idactive");
 
         if (idactive == null || idactive.isEmpty()) {
             response.getWriter().println("❌ Không có ID hoạt động.");

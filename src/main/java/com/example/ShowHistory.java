@@ -27,7 +27,7 @@ public class ShowHistory extends HttpServlet {
 
         String sql = "SELECT active.id, active.title AS tenhd, active.location AS diadiem, active.latitude, active.longitude, " +
                      "active.organization AS tochuc, active.start_time AS timestart, active.end_time AS timeend, " +
-                     "trangthai.trangthaidangky, active.status, trangthai.attend " +
+                     "trangthai.trangthaidangky, active.status " +
                      "FROM activities active " +
                      "JOIN trangthai ON active.id = trangthai.idactive " +
                      "WHERE trangthai.iduser = ? " +
