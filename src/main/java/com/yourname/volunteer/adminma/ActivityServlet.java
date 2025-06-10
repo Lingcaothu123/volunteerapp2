@@ -79,47 +79,45 @@ public class ActivityServlet extends HttpServlet {
             request.getRequestDispatcher("/AdminPage/activity_form.jsp").forward(request, response);
             return;
         }
-if ("view".equals(action)) {
-    int id = Integer.parseInt(request.getParameter("id"));
-    Activity act = null;
 
-    try (Connection conn = new dbconnect().getConnection()) {
-        PreparedStatement ps = conn.prepareStatement("SELECT * FROM activities WHERE id = ?");
-        ps.setInt(1, id);
-        ResultSet rs = ps.executeQuery();
+        if ("view".equals(action)) {
+            int activityId = Integer.parseInt(request.getParameter("id"));
+            List<Registrant> registrants = new ArrayList<>();
 
-        if (rs.next()) {
-            act = new Activity();
-            act.setId(rs.getInt("id"));
-            act.setTitle(rs.getString("title"));
-            act.setDescription(rs.getString("description"));
-            act.setStartTime(rs.getString("start_time"));
-            act.setEndTime(rs.getString("end_time"));
-            act.setLocation(rs.getString("location"));
-            act.setRoles(rs.getString("roles"));
-            act.setCapacity(rs.getInt("capacity"));
-            act.setOrganization(rs.getString("organization"));
-            act.setContact(rs.getString("contact"));
-            act.setStatus(rs.getString("status"));
-            act.setLatitude(rs.getDouble("latitude"));
-            act.setLongitude(rs.getDouble("longitude"));
+            try (Connection conn = new dbconnect().getConnection()) {
+  String sql = "SELECT login1.fullname, login1.phone, login1.skills, login1.email, trangthai.trangthaidangky, " +
+             "attend.diemdanh, attend.iduser, attend.idactive " +
+             "FROM login1 " +
+             "JOIN trangthai ON trangthai.iduser = login1.iduser " +
+             "LEFT JOIN attend ON attend.iduser = login1.iduser AND attend.idactive = trangthai.idactive " +
+             "WHERE trangthai.idactive = ?";
+PreparedStatement ps = conn.prepareStatement(sql);
+ps.setInt(1, activityId);
+ResultSet rs = ps.executeQuery();
 
-            double lat = act.getLatitude();
-            double lng = act.getLongitude();
-            String mapsLink = (lat != 0 && lng != 0) ?
-                "https://www.google.com/maps?q=" + lat + "," + lng :
-                "https://www.google.com/maps/search/?api=1&query=" + URLEncoder.encode(act.getLocation(), "UTF-8");
-            act.setMapsLink(mapsLink);
+                while (rs.next()) {
+                    Registrant r = new Registrant();
+                    r.setFullname(rs.getString("fullname"));
+                    r.setPhone(rs.getString("phone"));
+                    r.setSkills(rs.getString("skills"));
+                    r.setEmail(rs.getString("email"));
+                    r.setTrangthaidangky(rs.getString("trangthaidangky"));
+
+                    r.setDiemdanh(rs.getString("diemdanh"));
+                    r.setIduser(rs.getString("iduser"));
+                    r.setIdactive(rs.getString("idactive"));
+
+                    registrants.add(r);
+                }
+            } catch (Exception e) {
+                throw new ServletException("Error loading registrants", e);
+            }
+
+            request.setAttribute("registrants", registrants);
+            request.setAttribute("activityId", activityId);
+            request.getRequestDispatcher("/AdminPage/activity_registrants.jsp").forward(request, response);
+            return;
         }
-    } catch (Exception e) {
-        throw new ServletException("Error loading activity for view", e);
-    }
-
-    request.setAttribute("activity", act);
-    request.getRequestDispatcher("/AdminPage/activity_detail.jsp").forward(request, response);
-    return;
-}
-
 
         if ("add".equals(action)) {
             request.setAttribute("action", "add");
@@ -239,8 +237,6 @@ if ("view".equals(action)) {
         } catch (Exception e) {
             throw new ServletException("Error saving activity", e);
         }
-        
-
     }
 
     private String convertDbToHtmlDateTime(String dbDateTime) {
