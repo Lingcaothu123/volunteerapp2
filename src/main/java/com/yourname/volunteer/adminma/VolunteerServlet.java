@@ -131,6 +131,14 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response) 
                 attendStmt.setInt(2, activityId);
                 attendStmt.setString(3, "Chưa điểm danh");
                 attendStmt.executeUpdate();
+                    String insertHistory = "INSERT INTO history (ngaygiothaotac, tt, iduser, id) VALUES (GETDATE(), ?, ?, ?)";
+                    try (PreparedStatement insertHistoryStmt = conn.prepareStatement(insertHistory)) {
+        insertHistoryStmt.setString(1, "Đã xác nhận");
+        insertHistoryStmt.setString(2, String.valueOf(userId)); // vì iduser là nvarchar
+        insertHistoryStmt.setString(3, String.valueOf(activityId)); // vì id (tức idactive) là nvarchar(10)
+        insertHistoryStmt.executeUpdate();
+    }
+                
             }
         }
 

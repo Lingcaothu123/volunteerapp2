@@ -25,7 +25,12 @@
     </script>
 </head>
 <body>
-<h2>Activity List</h2>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+    <h2>Activity List</h2>
+    <a href="xuatdiemdanh" style="text-decoration: none; font-size: 16px; background-color: 
+       #4CAF50; color: white; padding: 8px 12px; border-radius: 4px;">Xuất điểm danh</a>
+</div>
+
 <table border="1">
     <tr>
         <th>ID</th>

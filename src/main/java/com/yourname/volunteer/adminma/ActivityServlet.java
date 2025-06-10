@@ -79,6 +79,47 @@ public class ActivityServlet extends HttpServlet {
             request.getRequestDispatcher("/AdminPage/activity_form.jsp").forward(request, response);
             return;
         }
+if ("view".equals(action)) {
+    int id = Integer.parseInt(request.getParameter("id"));
+    Activity act = null;
+
+    try (Connection conn = new dbconnect().getConnection()) {
+        PreparedStatement ps = conn.prepareStatement("SELECT * FROM activities WHERE id = ?");
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            act = new Activity();
+            act.setId(rs.getInt("id"));
+            act.setTitle(rs.getString("title"));
+            act.setDescription(rs.getString("description"));
+            act.setStartTime(rs.getString("start_time"));
+            act.setEndTime(rs.getString("end_time"));
+            act.setLocation(rs.getString("location"));
+            act.setRoles(rs.getString("roles"));
+            act.setCapacity(rs.getInt("capacity"));
+            act.setOrganization(rs.getString("organization"));
+            act.setContact(rs.getString("contact"));
+            act.setStatus(rs.getString("status"));
+            act.setLatitude(rs.getDouble("latitude"));
+            act.setLongitude(rs.getDouble("longitude"));
+
+            double lat = act.getLatitude();
+            double lng = act.getLongitude();
+            String mapsLink = (lat != 0 && lng != 0) ?
+                "https://www.google.com/maps?q=" + lat + "," + lng :
+                "https://www.google.com/maps/search/?api=1&query=" + URLEncoder.encode(act.getLocation(), "UTF-8");
+            act.setMapsLink(mapsLink);
+        }
+    } catch (Exception e) {
+        throw new ServletException("Error loading activity for view", e);
+    }
+
+    request.setAttribute("activity", act);
+    request.getRequestDispatcher("/AdminPage/activity_detail.jsp").forward(request, response);
+    return;
+}
+
 
         if ("add".equals(action)) {
             request.setAttribute("action", "add");
@@ -198,6 +239,8 @@ public class ActivityServlet extends HttpServlet {
         } catch (Exception e) {
             throw new ServletException("Error saving activity", e);
         }
+        
+
     }
 
     private String convertDbToHtmlDateTime(String dbDateTime) {

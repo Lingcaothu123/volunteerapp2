@@ -28,6 +28,8 @@
         <th>Contact</th>
         <th>Status</th>
         <th>Actions</th>
+        <th>View</th>
+
     </tr>
 
     <%
@@ -54,6 +56,10 @@
             <a href="ActivityServlet?action=edit&id=<%= a.getId() %>">Edit</a> |
             <a href="ActivityServlet?action=delete&id=<%= a.getId() %>" onclick="return confirm('Delete this activity?');">Delete</a>
         </td>
+        <td>
+    <a href="ActivityServlet?action=view&id=<%= a.getId() %>" target="_blank">View</a>
+</td>
+
     </tr>
     <%
             }

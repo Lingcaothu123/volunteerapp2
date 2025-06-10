@@ -68,7 +68,7 @@
         <option value="Đã diễn ra" <%= "Đã diễn ra".equals(activity.getStatus()) ? "selected" : "" %>>Đã diễn ra</option>
     </select><br><br>
 <% } %>
-        <!-- Hidden fields for coordinates -->
+          <!-- Hidden fields for coordinates -->
         <input type="hidden" name="latitude" id="latitude" value="<%= isEdit ? activity.getLatitude() : "" %>">
         <input type="hidden" name="longitude" id="longitude" value="<%= isEdit ? activity.getLongitude() : "" %>">
 
