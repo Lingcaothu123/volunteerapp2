@@ -11,8 +11,6 @@ import jakarta.servlet.http.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.Base64;
 
 @WebServlet("/QRCodeGenerator")
@@ -27,7 +25,22 @@ public class QRCodeGenerator extends HttpServlet {
             return;
         }
 
-        String qrContent = "https://37a9-2001-ee0-4f05-c8d0-4965-45d6-d12b-52d5.ngrok-free.app/QRScanServlet?idactive=" + idactive;  // URL điểm danh mới
+        // Lấy base URL động từ request
+        String scheme = request.getScheme();             // http hoặc https
+        String serverName = request.getServerName();     // ví dụ: localhost hoặc IP
+        int serverPort = request.getServerPort();        // ví dụ: 8080
+        String contextPath = request.getContextPath();   // ví dụ: /mail hoặc ""
+
+        String portPart = "";
+        if ((scheme.equals("http") && serverPort != 80) ||
+            (scheme.equals("https") && serverPort != 443)) {
+            portPart = ":" + serverPort;
+        }
+
+        String baseUrl = scheme + "://" + serverName + portPart + contextPath;
+
+        // Tạo nội dung QR code dựa vào baseUrl và idactive
+        String qrContent = baseUrl + "/QRScanServlet?idactive=" + idactive;
 
         // Thiết lập kích thước mã QR
         int width = 300;
@@ -37,7 +50,7 @@ public class QRCodeGenerator extends HttpServlet {
         try {
             // Tạo mã QR
             BitMatrix bitMatrix = new MultiFormatWriter().encode(qrContent, BarcodeFormat.QR_CODE, width, height);
-            
+
             // Tạo mã QR và chuyển nó thành một mảng byte
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             MatrixToImageWriter.writeToStream(bitMatrix, format, baos);
