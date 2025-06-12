@@ -25,7 +25,7 @@ public class showactive extends HttpServlet {
             com.example.dbconnect db = new com.example.dbconnect();
             try (Connection connection = db.getConnection()) {
 
-                StringBuilder query = new StringBuilder("SELECT * FROM activities where status=N'Chưa diễn ra'");
+                StringBuilder query = new StringBuilder("SELECT * FROM activities ");
                 boolean useFilter = (keyword != null && !keyword.trim().isEmpty()) && (columns != null && columns.length > 0);
 
                 if (useFilter) {

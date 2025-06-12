@@ -61,7 +61,7 @@ public class ConfirmActivityServlet extends HttpServlet {
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                         String formattedNow = now.format(formatter);
 
-                        String insertSql2 = "INSERT INTO history (ngaygiothaotac, tt, iduser, id) VALUES (?, N'đang chờ xác nhận', ?, ?)";
+                        String insertSql2 = "INSERT INTO history (ngaygiothaotac, tt, iduser, id) VALUES (?, N'Đang chờ xác nhận', ?, ?)";
                         try (PreparedStatement historyStmt = conn.prepareStatement(insertSql2)) {
                             historyStmt.setString(1, formattedNow);
                             historyStmt.setString(2, iduser);

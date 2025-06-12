@@ -7,22 +7,40 @@
 <head>
     <title>Manage Activities</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function generateQRCode(idactive) {
-            $.ajax({
-                url: 'QRCodeGenerator',
-                method: 'GET',
-                data: { idactive: idactive },  // Gửi ID của hoạt động
-                success: function(response) {
-                    // Tạo vùng chứa QR code và hiển thị nó
-                    $('#qrCode_' + idactive).html('<img src="data:image/png;base64,' + response + '" alt="QR Code" />');
-                },
-                error: function() {
-                    alert('Có lỗi xảy ra khi tạo mã QR!');
-                }
-            });
+<script>
+    function generateQRCode(idactive) {
+        const qrDiv = $('#qrCode_' + idactive);
+        const btn = $('#qrBtn_' + idactive);
+
+        // Nếu QR đang hiển thị, thì ẩn nó
+        if (qrDiv.is(':visible') && qrDiv.html().trim() !== '') {
+            qrDiv.hide();
+            btn.text('Tạo mã QR');
+        } else {
+            // Nếu chưa có mã QR, gọi server để tạo
+            if (qrDiv.html().trim() === '') {
+                $.ajax({
+                    url: 'QRCodeGenerator',
+                    method: 'GET',
+                    data: { idactive: idactive },
+                    success: function(response) {
+                        qrDiv.html('<img src="data:image/png;base64,' + response + '" alt="QR Code" />');
+                        qrDiv.show();
+                        btn.text('Ẩn mã QR');
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra khi tạo mã QR!');
+                    }
+                });
+            } else {
+                // Đã có QR => chỉ cần hiển thị lại
+                qrDiv.show();
+                btn.text('Ẩn mã QR');
+            }
         }
-    </script>
+    }
+</script>
+
 </head>
 <body>
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -72,9 +90,9 @@
         <td><%= a.getContact() %></td>
         <td><%= a.getStatus() %></td>
         <td>
-            <button onclick="generateQRCode(<%= idactive %>)">Tạo mã QR</button>
-            <div id="qrCode_<%= idactive %>"></div>  <!-- Vùng chứa mã QR sẽ được hiển thị ở đây -->
-        </td>
+    <button id="qrBtn_<%= idactive %>" onclick="generateQRCode(<%= idactive %>)">Tạo mã QR</button>
+    <div id="qrCode_<%= idactive %>" style="margin-top: 5px; display: none;"></div>
+</td>
     </tr>
     <%
                 }

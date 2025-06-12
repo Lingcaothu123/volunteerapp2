@@ -3,39 +3,37 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>volunter</title>
-     <link rel="stylesheet" href="css/hstyle.css">
+    <title>Volunteer</title>
+    <link rel="stylesheet" href="css/hstyle.css">
 </head>
 <body>
+    <%
+        // Kiểm tra session có tồn tại thông tin fullname hay không
+        String fullname = (String) session.getAttribute("fullname");
+        if (fullname == null) {
+            // Nếu chưa đăng nhập, redirect về trang login
+            response.sendRedirect(request.getContextPath() + "/login");
+            return; // Kết thúc trang hiện tại để tránh tiếp tục render
+        }
+    %>
     <div class="header">
-        volunter <span style="color:white;"></span>
+        Volunteer
         <div style="float:right; font-size:16px;">
-          <%
-    String fullname = (String) session.getAttribute("fullname");
-    if (fullname == null) {
-        response.sendRedirect("login.jsp"); 
-    }
-%>
-Welcome <%= fullname %> |<a href="logout" style="color:black;">Log out</a>
+            Welcome <%= fullname %> | <a href="<%=request.getContextPath()%>/logout" style="color:black;">Log out</a>
         </div>
     </div>
     <div class="container">
         <div class="sidebar">
-            <a href="home.jsp">Home</a>
-            <a href="showactive.jsp">Xem danh sách các hoạt động</a>
-            <a href="updateinf.jsp">Sửa thông tin cá nhân</a>
-            <a href="historyactive.jsp">Hoạt động của bạn</a>
-            <a href="personalhistory.jsp">Lịch sử cá nhân</a>
-            <a href="attend.jsp">Xem điểm danh</a>
-
-<!--            <form action="search.jsp" method="get">
-                <input type="text" name="query" />
-                <button type="submit" class="search-btn">Search</button>
-            </form>-->
+            <a href="<%=request.getContextPath()%>/home.jsp">Home</a>
+            <a href="<%=request.getContextPath()%>/showactive.jsp">Xem danh sách các hoạt động</a>
+            <a href="<%=request.getContextPath()%>/updateinf.jsp">Sửa thông tin cá nhân</a>
+            <a href="<%=request.getContextPath()%>/historyactive.jsp">Hoạt động của bạn</a>
+            <a href="<%=request.getContextPath()%>/personalhistory.jsp">Lịch sử cá nhân</a>
+            <a href="<%=request.getContextPath()%>/attend.jsp">Xem điểm danh</a>
         </div>
         <div class="main-content">
             <h1>Home</h1>
-           
+            <!-- Nội dung chính của trang home -->
         </div>
     </div>
 </body>

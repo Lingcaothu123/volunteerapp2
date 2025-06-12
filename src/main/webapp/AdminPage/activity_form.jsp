@@ -65,7 +65,7 @@
     <select name="status" required>
         <option value="Chưa diễn ra" <%= "Chưa diễn ra".equals(activity.getStatus()) ? "selected" : "" %>>Chưa diễn ra</option>
         <option value="Đang diễn ra" <%= "Đang diễn ra".equals(activity.getStatus()) ? "selected" : "" %>>Đang diễn ra</option>
-        <option value="Đã diễn ra" <%= "Đã diễn ra".equals(activity.getStatus()) ? "selected" : "" %>>Đã diễn ra</option>
+        <option value="Đã kết thúc" <%= "Đã kết thúc".equals(activity.getStatus()) ? "selected" : "" %>>Đã kết thúc</option>
     </select><br><br>
 <% } %>
           <!-- Hidden fields for coordinates -->

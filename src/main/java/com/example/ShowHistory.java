@@ -30,7 +30,7 @@ public class ShowHistory extends HttpServlet {
                      "trangthai.trangthaidangky, active.status " +
                      "FROM activities active " +
                      "JOIN trangthai ON active.id = trangthai.idactive " +
-                     "WHERE trangthai.iduser = ? " +
+                     "WHERE trangthai.iduser = ? and status!=N'Đã kết thúc'" +
                      "ORDER BY active.start_time ASC";
 
         try {
@@ -97,7 +97,7 @@ public class ShowHistory extends HttpServlet {
                         .append("<td>").append(status).append("</td>")
                
 .append("<td>");
-if ("Đã xác nhận".equalsIgnoreCase(trangthaidangky)) {
+if ("Đang diễn ra".equalsIgnoreCase(status)) {
     data.append("<input type='checkbox' name='register' value='").append(id).append("' disabled>");
 } else {
     data.append("<input type='checkbox' name='register' value='").append(id).append("'>");

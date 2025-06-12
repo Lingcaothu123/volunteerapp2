@@ -85,11 +85,11 @@ public class ActivityServlet extends HttpServlet {
             List<Registrant> registrants = new ArrayList<>();
 
             try (Connection conn = new dbconnect().getConnection()) {
-  String sql = "SELECT login1.fullname, login1.phone, login1.skills, login1.email, trangthai.trangthaidangky, " +
+    String sql = "SELECT login1.fullname, login1.phone, login1.skills, login1.email, trangthai.trangthaidangky, " +
              "attend.diemdanh, attend.iduser, attend.idactive " +
              "FROM login1 " +
              "JOIN trangthai ON trangthai.iduser = login1.iduser " +
-             "LEFT JOIN attend ON attend.iduser = login1.iduser AND attend.idactive = trangthai.idactive " +
+             "LEFT JOIN attend ON attend.iduser = trangthai.iduser AND attend.idactive = trangthai.idactive " +
              "WHERE trangthai.idactive = ?";
 PreparedStatement ps = conn.prepareStatement(sql);
 ps.setInt(1, activityId);
